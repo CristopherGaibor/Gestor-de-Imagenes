@@ -41,7 +41,7 @@ El funcionamiento del sistema se divide en dos fases críticas que cruzan las fr
 
 Para la construcción de este proyecto, el equipo integra disciplinas avanzadas de la ingeniería de software y la telemática:
 
-### 🧠 Ingeniería de Software y Arquitectura Limpia
+###  Ingeniería de Software y Arquitectura Limpia
 * **Arquitectura Hexagonal (Ports & Adapters):** Aplicada en el servicio de Go. Permite desacoplar las reglas del negocio (dominio e imágenes) de los factores externos (servidores HTTP, drivers de almacenamiento o bases de datos). Esto garantiza la mantenibilidad a largo plazo.
 * **Modelo Cliente-Servidor Distribuido:** Separación de responsabilidades donde las capas de presentación, lógica y datos se comunican mediante protocolos de aplicación estandarizados (HTTP/REST).
 
