@@ -45,15 +45,15 @@ Para la construcción de este proyecto, el equipo integra disciplinas avanzadas 
 * **Arquitectura Hexagonal (Ports & Adapters):** Aplicada en el servicio de Go. Permite desacoplar las reglas del negocio (dominio e imágenes) de los factores externos (servidores HTTP, drivers de almacenamiento o bases de datos). Esto garantiza la mantenibilidad a largo plazo.
 * **Modelo Cliente-Servidor Distribuido:** Separación de responsabilidades donde las capas de presentación, lógica y datos se comunican mediante protocolos de aplicación estandarizados (HTTP/REST).
 
-### 🔒 Criptografía y Seguridad de la Información
+###  Criptografía y Seguridad de la Información
 * **Cifrado Simétrico por Bloques (AES):** Aplicación de algoritmos matemáticos seguros para proteger la persistencia de datos sensibles, cumpliendo con estándares internacionales de seguridad industrial.
 * **Políticas de Privacidad del Diseño (Privacy by Design):** Estructuración de flujos lógicos donde los datos de identidad digital nunca se exponen ni viajan en texto plano a través de la red.
 
-### 🌐 Redes de Datos y Conmutación Corporativa
+###  Redes de Datos y Conmutación Corporativa
 * **Segmentación (VLANs):** Diseño lógico de redes para aislar entornos lógicos de servidores corporativos de los entornos de usuarios finales, disminuyendo la superficie de ataque del sistema.
 * **Enrutamiento Inter-VLAN y ACLs:** Configuración de directrices de enrutamiento de control de acceso para regular estrictamente qué segmentos de la red tienen permitido comunicarse entre sí.
 
-### 🏛️ Impacto Social, Ético y Cultural
+###  Impacto Social, Ético y Cultural
 * **Inclusión Tecnológica:** El uso de tecnologías eficientes y de bajo consumo de recursos (Go + SQLite) permite el despliegue del sistema en hardware heredado o de bajo costo, promoviendo la accesibilidad tecnológica.
 * **Ética y Gobernanza de Datos:** El sistema implementa un esquema de responsabilidad digital donde cada recurso multimedia está estrictamente ligado a una identidad, previniendo el uso indebido o malintencionado de la infraestructura de almacenamiento.
 
