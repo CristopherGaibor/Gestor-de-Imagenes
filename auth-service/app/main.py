@@ -1,41 +1,50 @@
 from fastapi import FastAPI, HTTPException
 from sqlmodel import Session, select
+from app.models import engine, User, UserIn, create_db
+from app.auth import hash_password, verify_password
 
-
-from app.database import engine, create_db
-from app.models.Usuario import User, UserIn  
-from app.core.seguridad import encrypt_password_aes, decrypt_password_aes
-app = FastAPI(title="API Auth Simple")
-
+app = FastAPI(title="Autenticacion de Proyectointergrador")
 
 @app.on_event("startup")
 def on_startup():
     create_db()
 
 @app.post("/register")
-def register(user: User): 
+def register(user: UserIn):
     with Session(engine) as session:
-        existing = session.exec(select(User).where(User.username == user.username)).first()
-        if existing:
-            raise HTTPException(status_code=400, detail="El usuario ya existe")
+        existing_user = session.exec(
+            select(User).where(User.username == user.username)
+        ).first()
 
-       
-        user.encrypted_password = encrypt_password_aes(user.encrypted_password)
-        
-        session.add(user)
+        if existing_user:
+            raise HTTPException(status_code=401, detail="El usuario ya existe")
+
+        new_user = User(
+            username=user.username,
+            hashed_password=hash_password(user.password)
+        )
+
+        session.add(new_user)
         session.commit()
-        session.refresh(user)
-        return {"message": "Usuario registrado correctamente", "username": user.username}
+        session.refresh(new_user)
+
+        return {
+            "message": "Usuario registrado correctamente",
+            "id": new_user.id,
+            "username": new_user.username
+        }
 
 @app.post("/login")
-def login(user: User):
+def login(user: UserIn):
     with Session(engine) as session:
-        db_user = session.exec(select(User).where(User.username == user.username)).first()
+        db_user = session.exec(
+            select(User).where(User.username == user.username)
+        ).first()
+
         if not db_user:
             return {"message": "Login fallido"}
 
-        password_real = decrypt_password_aes(db_user.encrypted_password)
-        if user.encrypted_password == password_real:
+        if verify_password(user.password, db_user.hashed_password):
             return {"message": "Login exitoso"}
 
         return {"message": "Login fallido"}
