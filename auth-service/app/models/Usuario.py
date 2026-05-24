@@ -1,16 +1,17 @@
-from typing import Optional
-from sqlmodel import SQLModel, Field
-from datetime import datetime
+from typing import Optional  # 1. Agrega esto arriba
+from sqlmodel import SQLModel, Field, create_engine
+
+sqlite_file = "users.db"
+engine = create_engine(f"sqlite:///{sqlite_file}", echo=True)
 
 class User(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
+    id: Optional[int] = Field(default=None, primary_key=True) 
     username: str = Field(unique=True, index=True)
-    email: str
-    password: str  
-    created_at: datetime = Field(default_factory=datetime.utcnow)
-
+    hashed_password: str
 
 class UserIn(SQLModel):
     username: str
     password: str
-    email: str
+
+def create_db():
+    SQLModel.metadata.create_all(engine)
