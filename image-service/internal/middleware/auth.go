@@ -2,38 +2,37 @@ package middleware
 
 import (
 	"net/http"
-
-	"github.com/gin-gonic/gin"
 )
 
-func RequireAuth() gin.HandlerFunc {
-	return func(c *gin.Context) {
-
-		authHeader := c.GetHeader("Authorization")
+// RequireAuth intercepta la petición nativa y valida el token con Python
+func RequireAuth(next http.HandlerFunc) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		// 1. Extraemos el Token
+		authHeader := r.Header.Get("Authorization")
 		if authHeader == "" {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Acceso denegado: Token no proporcionado"})
-			c.Abort()
+			http.Error(w, `{"error": "Acceso denegado: Token no proporcionado"}`, http.StatusUnauthorized)
 			return
 		}
 
+		// 2. Nos comunicamos con el contenedor de Python (auth-service)
 		req, err := http.NewRequest("GET", "http://auth-service:8000/api/auth/verify", nil)
 		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Error interno al preparar la verificación"})
-			c.Abort()
+			http.Error(w, `{"error": "Error interno al preparar la verificación"}`, http.StatusInternalServerError)
 			return
 		}
-
 		req.Header.Add("Authorization", authHeader)
 
+		// 3. Ejecutamos la llamada HTTP
 		client := &http.Client{}
 		resp, err := client.Do(req)
 
+		// 4. Si Python rechaza el token, bloqueamos
 		if err != nil || resp.StatusCode != http.StatusOK {
-			c.JSON(http.StatusUnauthorized, gin.H{"error": "Acceso denegado: Token inválido o expirado"})
-			c.Abort()
+			http.Error(w, `{"error": "Acceso denegado: Token inválido o expirado"}`, http.StatusUnauthorized)
 			return
 		}
 
-		c.Next()
+		// 5. ¡Luz Verde! Pasamos la petición a tu manejador original
+		next.ServeHTTP(w, r)
 	}
 }
