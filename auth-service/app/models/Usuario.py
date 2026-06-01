@@ -1,4 +1,4 @@
-from typing import Optional  # 1. Agrega esto arriba
+from typing import Optional  
 from sqlmodel import SQLModel, Field, create_engine
 
 sqlite_file = "users.db"
