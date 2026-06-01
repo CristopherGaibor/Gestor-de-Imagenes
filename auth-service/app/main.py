@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from sqlmodel import Session, select
 from app.models import engine, User, UserIn, create_db
-from app.auth import hash_password, verify_password
+from app.core.seguridad import hash_password, verify_password, create_access_token, JWT_SECRET
 
 app = FastAPI(title="Autenticacion de Proyectointergrador")
 
